@@ -1,0 +1,52 @@
+**Singleton Design Pattern Advantages and dis advantages: **
+
+Careful With “Singleton” Lookalikes (WAY TOO COMMON)
+
+Have you ever been told that Singleton is an anti-pattern?
+
+Well, Singletons can be ok, but if you are not careful, they aren’t just an anti-pattern. THEY CAN BE DANGEROUS!
+
+In this episode, we discuss the good and bad traits of the Singleton pattern, its common benefits and pitfalls, and showcase how dependency inversion can help us protect our systems in 4 simple steps.
+
+We received the following question from a member of the community:
+
+“I have been looking for a robust way to write a testable networking layer. And I am always confused about when and when not to use singletons. If you can answer these questions, I will be really grateful. Thank you for the video!”
+
+What is a Singleton?
+The Singleton pattern as described in the Design Patterns book (GOF) by Gamma, Johnson, Vlissides, and Helm is a way to make sure that a class has only one instance and it provides a single point of access to it. The pattern specifies that the class itself should be responsible for keeping track of its sole instance. It can further ensure that no other instance can be created by intercepting requests for creating new objects and provide a way to access the sole instance.
+
+Moreover, to ensure that the class can't be instantiated from the outside world more than once, the singleton pattern prohibits the declaration of a visible to the module, initializer.
+
+What is a singleton with a lowercase "s"?
+A variation known as a singleton with a lowercase "s," constitutes a class that is being instantiated only one time in the whole lifecycle of the app, however, its API does not prohibit developers from creating a new instance of the class. The constraint is up to the developer's choice or discipline to instantiate it only once.
+
+Some examples of such objects are Apple’s URLSession.shared and UserDefaults.standard. Although they offer a shared instance for accessing an immutable reference of themselves, they also allow their clients to instantiate them through their initializers.
+
+Singletons vs. Global Mutable Shared State
+Another important point when it comes to singleton objects is not to be confused with mutable global shared state. Mutable global state is usually accessed by a static sharedInstance of a class and allows the access and mutation of that reference (static var instead of static let). For example, a global mutable "Context" that provides access to various values and references such as Date, Networking and Database components.
+
+Mutable global shared state can be risky but offers ease of use when it comes to accessing objects throughout the system and the easy configuration of the system environment (e.g., mocking the current time, locale, or network responses).
+
+Examples of good Singleton candidates
+So when should we use the singleton pattern?
+
+When we need precisely one instance of a class, and it must be accessible to clients from a well-known access point.
+
+For example, a class that logs messages to the console is a good candidate to do so, as the system may require access to it from any given point, plus we should only need its public API to log something, instead of re-creating and mutating its reference.
+
+Moreover, if we need to extend the functionality of that class, then the singleton pattern allows us to subclass or create extensions on the class type.
+
+Examples of bad Singleton candidates
+The rule of thumb is to decide which objects should be created just once. Singleton objects should be rare in most systems and need to have a one-to-one relationship with the system. Meaning "it makes sense" or it’s mandatory for a system to have only one "instance of such type."
+
+For example, Views are bad Singleton candidates as they should be able to allocate and deallocate memory on demand. The same holds for types of components such as Presenters, View Models, and Coordinators, for example.
+
+Dependency Inversion
+It's a common practice for libraries to use singleton objects instead of allowing us to instantiate internal classes to facilitate their use. Although this approach provides convenience for developers, it can create tight coupling in the system. A simple way to break the tight coupling and protect the rest of the system is to use dependency inversion instead of accessing the concrete singleton instance directly. By hiding the third-party dependency behind an interface that we own and we can extend (e.g., protocol/closure), we can keep the modules of our system free of knowing about the implementation details of another system. Such separation can protect our codebase from external library breaking changes.
+
+As we showcase in the video, our modules can break the tight coupling and internal dependency of a shared instance, by injecting and inverting the dependency of the shared instance.
+
+Conclusion
+It's important to differentiate between bad and good Singletons.
+
+By unnecessarily introducing Singletons (especially as implicit dependencies) we can increase coupling and risk, thus the probability of introducing regressions and making mistakes. It may be ok initially, but we need to be proactive and identify when it’s time to invert dependencies and decouple the modules.
